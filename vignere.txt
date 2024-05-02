@@ -1,0 +1,64 @@
+def vignere(text, key, mode="e"):
+    text, key = text.upper(), key.upper()
+    if mode == "d":
+        k = -1
+    elif mode == "e":
+        k = 1
+    else:
+        return
+    
+    output = [chr((ord(text[i]) + (ord(key[i % len(key)]) * k) + 130) % 26 + 65) for i in range(len(text))]
+    return "".join(output)
+
+plaintext = input("Enter the Plain Text: ")
+key = input("Enter the Key: ")
+encrypted_text = vignere(text=plaintext, key=key, mode="e")
+print("Encrypted:", encrypted_text)
+decrypted_text = vignere(text=encrypted_text, key=key, mode="d")
+print("Decrypted:", decrypted_text)
+
+
+----------------------------------------------------------------------------------------------------------------------------------------->
+
+
+
+1. Define the Function:
+   - Create a function named `vignere` that takes three parameters: `text`, `key`, and `mode`.
+
+2. Standardize Input:
+   - Convert both `text` and `key` to uppercase to ensure case uniformity.
+
+3. Initialize Variables:
+   - Start with an empty string `output` to hold the result.
+
+4. Loop Through Text:
+   - Iterate over each character in `text`, using index `i` to access each character.
+
+5. Check Mode:
+   - If `mode` is `"e"` (encryption):
+     - Calculate `k` as the ASCII value of the key character corresponding to the current text character minus 65 (ASCII for 'A').
+     - Compute the encrypted character using `(ord(text[i]) + k) % 26 + 65` to cycle within alphabet boundaries.
+     - Convert the resulting ASCII value back to a character and append it to `output`.
+   - If `mode` is `"d"` (decryption):
+     - Calculate `k` similarly to encryption.
+     - Compute the decrypted character using `(ord(text[i]) - k + 26) % 26 + 65` to handle potential negative values correctly.
+     - Convert this value back to a character and append it to `output`.
+
+6. Return or Error Handling:
+   - If the mode is neither `"e"` nor `"d"`, return a message indicating an invalid mode.
+
+7. Output the Result:
+   - Return the `output` string which now contains either the encrypted or decrypted text.
+
+8. Get User Input:
+   - Outside the function, prompt the user to input the `plaintext`, `key`, and `mode` ('e' for encryption, 'd' for decryption).
+
+9. Execute Function Based on Mode:
+   - If the user enters `"e"`, call the `vignere` function with mode `"e"` to encrypt.
+   - If `"d"` is entered, call the function with mode `"d"` to decrypt.
+   - Print the resulting `Encrypted Text` or `Decrypted Text`.
+
+10. Error Handling in Input:
+    - If an invalid mode is entered, print an error message.
+
+

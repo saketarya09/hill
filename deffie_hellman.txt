@@ -1,0 +1,68 @@
+from random import randint
+
+if __name__ == '__main__':
+    # Both persons agree on public keys Gs and Ps
+    # Prime number P
+    Ps = 23
+     
+    # Gs is primitive root for Ps
+    Gs = 9
+     
+    print('Value of Ps is: {}'.format(Ps))
+    print('Value of Gs is: {}'.format(Gs))
+     
+    # g is the private key chosen by Joy
+    g = 4
+    print('Private Key g is: {}'.format(g))
+     
+    # fetches the generated key
+    p = int(pow(Gs, g, Ps)) 
+     
+    # h will be the chosen private key by Happy
+    h = 3
+    print('Private Key h is: {}'.format(h))
+    
+    # fetches the generated key
+    q = int(pow(Gs, h, Ps)) 
+     
+    # Joy's Secret key
+    K_A = int(pow(q, g, Ps))
+     
+    # Happy's Secret key
+    K_B = int(pow(p, h, Ps))
+     
+    print('Joy\'s Secret key is: {}'.format(K_A))
+    print('Happy\'s Secret key is: {}'.format(K_B))
+---------------------------------------------------------------------------------------------------->
+Begin
+    Define public prime number Ps and base Gs
+    Set Ps to 23
+    Set Gs to 9
+    
+    Display "Value of Ps is : Ps"
+    Display "Value of Gs is : Gs"
+    
+    Define private key g for Joy
+    Set g to 4
+    Display "Private Key g is: g"
+    
+    Compute the public key p for Joy using the formula p = Gs^g mod Ps
+    Display p
+    
+    Define private key h for Happy
+    Set h to 3
+    Display "Private Key h is : h"
+    
+    Compute the public key q for Happy using the formula q = Gs^h mod Ps
+    Display q
+    
+    Compute Joy's secret key K_A using Happy's public key:
+    Set K_A to q^g mod Ps
+    Display "Joy's Secret key is : K_A"
+    
+    Compute Happy's secret key K_B using Joy's public key:
+    Set K_B to p^h mod Ps
+    Display "Happy's Secret key is : K_B"
+    
+    Verify that both secret keys are equal (K_A == K_B)
+End

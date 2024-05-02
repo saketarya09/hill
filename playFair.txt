@@ -1,0 +1,120 @@
+def generate_key_table(key):
+    key = key.upper().replace("J", "I")
+    key_set = set(key)
+    alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
+    key_table = []
+    for char in key_set:
+        if char in alphabet:
+            alphabet = alphabet.replace(char, "")
+    key += alphabet
+    for i in range(0, len(key), 5):
+        key_table.append(list(key[i:i+5]))
+    return key_table
+
+def get_position(key_table, char):
+    for i in range(5):
+        for j in range(5):
+            if key_table[i][j] == char:
+                return i, j
+
+def encrypt(plaintext, key):
+    plaintext = plaintext.upper().replace("J", "I")
+    key_table = generate_key_table(key)
+    ciphertext = ""
+    for i in range(0, len(plaintext), 2):
+        if i == len(plaintext) - 1:
+            plaintext += "X"
+        if plaintext[i] == plaintext[i + 1]:
+            plaintext = plaintext[:i+1] + 'X' + plaintext[i+1:]
+    for i in range(0, len(plaintext), 2):
+        row1, col1 = get_position(key_table, plaintext[i])
+        row2, col2 = get_position(key_table, plaintext[i + 1])
+        if row1 == row2:
+            ciphertext += key_table[row1][(col1 + 1) % 5] + key_table[row2][(col2 + 1) % 5]
+        elif col1 == col2:
+            ciphertext += key_table[(row1 + 1) % 5][col1] + key_table[(row2 + 1) % 5][col2]
+        else:
+            ciphertext += key_table[row1][col2] + key_table[row2][col1]
+    return ciphertext
+
+def decrypt(ciphertext, key):
+    key_table = generate_key_table(key)
+    plaintext = ""
+    for i in range(0, len(ciphertext), 2):
+        row1, col1 = get_position(key_table, ciphertext[i])
+        row2, col2 = get_position(key_table, ciphertext[i + 1])
+        if row1 == row2:
+            plaintext += key_table[row1][(col1 - 1) % 5] + key_table[row2][(col2 - 1) % 5]
+        elif col1 == col2:
+            plaintext += key_table[(row1 - 1) % 5][col1] + key_table[(row2 - 1) % 5][col2]
+        else:
+            plaintext += key_table[row1][col2] + key_table[row2][col1]
+    return plaintext
+
+# Example Usage:
+key = input("Enter the key: ")
+plaintext = input("Enter the plaintext: ")
+ciphertext = encrypt(plaintext, key)
+print("Encrypted text:", ciphertext)
+decrypted_text = decrypt(ciphertext, key)
+print("Decrypted text:", decrypted_text)
+---------------------------------------------------------------------------Encryption-------------------------------------------------------------->
+
+Function encrypt(plaintext, key):
+    # Step 1: Generate the key table
+    key_table = generate_key_table(key)
+    
+    # Step 2: Preprocess plaintext
+    plaintext = preprocess(plaintext)
+
+    # Step 3: Encrypt the plaintext
+    ciphertext = ""
+    for each pair of characters in plaintext:
+        # Step 3.1: Find the positions of the characters in the key table
+        Get positions (row1, col1) and (row2, col2) of the characters
+        
+        # Step 3.2: Handle characters in the same row
+        if characters are in the same row:
+            Replace each character with the character to its right (modulo 5)
+        
+        # Step 3.3: Handle characters in the same column
+        else if characters are in the same column:
+            Replace each character with the character below it (modulo 5)
+        
+        # Step 3.4: Handle characters in different rows and columns
+        else:
+            Replace each character with the character at the intersection of the other character's row
+        
+        # Step 3.5: Append the encrypted characters to the ciphertext
+    
+    # Step 4: Return the ciphertext
+
+
+
+---------------------------------------------------------------------------Decryption-------------------------------------------------------------->
+
+Function decrypt(ciphertext, key):
+    # Step 1: Generate the key table
+    key_table = generate_key_table(key)
+    
+    # Step 2: Decrypt the ciphertext
+    plaintext = ""
+    for each pair of characters in ciphertext:
+        # Step 2.1: Find the positions of the characters in the key table
+        Get positions (row1, col1) and (row2, col2) of the characters
+        
+        # Step 2.2: Handle characters in the same row
+        if characters are in the same row:
+            Replace each character with the character to its left (modulo 5)
+        
+        # Step 2.3: Handle characters in the same column
+        else if characters are in the same column:
+            Replace each character with the character above it (modulo 5)
+        
+        # Step 2.4: Handle characters in different rows and columns
+        else:
+            Replace each character with the character at the intersection of the other character's row
+        
+        # Step 2.5: Append the decrypted characters to the plaintext
+    
+    # Step 3: Return the plaintext
