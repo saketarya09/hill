@@ -1,101 +1,118 @@
 Encryption--------------------------------------------------------------------------------------------->
 
-def encrypt_rail_fence(text, key):
-    rail = [['' for _ in range(len(text))] for _ in range(key)]
-    row, step = 0, 1
+def encrypt():
+    text = input("Enter a message to encrypt: ")
+    key = input("Enter the key (number): ")
+    
+    try:
+        key = int(key)
+    except ValueError:
+        return "Error: The key must be a number."
 
-    for char in text:
-        rail[row].append(char)
-        if row == 0:
-            step = 1
-        elif row == key - 1:
-            step = -1
-        row += step
+    encrypted_message = ""
+    for ch in text:
+        if ch.isalnum():  # Check if character is alphanumeric
+            if ch.islower():
+                ch = chr((ord(ch) - ord('a') + key) % 26 + ord('a'))
+            elif ch.isupper():
+                ch = chr((ord(ch) - ord('A') + key) % 26 + ord('A'))
+            elif ch.isdigit():
+                ch = chr((ord(ch) - ord('0') + key) % 10 + ord('0'))
+        else:
+            return "Error: Invalid character in message. Use only alphanumeric characters."
+        encrypted_message += ch
 
-    return ''.join(''.join(row) for row in rail)
+    return f"Encrypted message: {encrypted_message}"
 
-def main():
-    text = input("Enter the text to encrypt: ")
-    key = int(input("Enter the key: "))
-    encrypted_text = encrypt_rail_fence(text, key)
-    print("Encrypted text:", encrypted_text)
+print(encrypt())
 
-if __name__ == "__main__":
-    main()
+
 
 Encryption-------------------------------------------------------------------------------------------------------------------->
 
-1. Initialize: Create an empty matrix called "rail" with dimensions `key x len(text)`.
+Function Encrypt
+    Input: None
+    Output: Encrypted message or error message
 
-2. Setup Variables: Set `row` to 0 and `step` to 1.
+    Steps:
+    1. Prompt the user "Enter a message to encrypt:"
+    2. Read the input message into variable 'text'
+    3. Prompt the user "Enter the key (number):"
+    4. Read the input key into variable 'key'
+    5. Try to convert 'key' to an integer
+        If conversion fails, return "Error: The key must be a number."
+    6. Initialize 'encrypted_message' to an empty string
+    7. For each character 'ch' in 'text'
+        a. If 'ch' is a lowercase letter
+            i. Convert 'ch' using the formula (ord(ch) - ord('a') + key) % 26 + ord('a')
+            ii. Convert the result back to a character and append to 'encrypted_message'
+        b. Else if 'ch' is an uppercase letter
+            i. Convert 'ch' using the formula (ord(ch) - ord('A') + key) % 26 + ord('A')
+            ii. Convert the result back to a character and append to 'encrypted_message'
+        c. Else if 'ch' is a digit
+            i. Convert 'ch' using the formula (ord(ch) - ord('0') + key) % 10 + ord('0')
+            ii. Convert the result back to a character and append to 'encrypted_message'
+        d. Else
+            return "Error: Invalid character in message. Use only alphanumeric characters."
+    8. Return "Encrypted message: " concatenated with 'encrypted_message'
 
-3. Iterate Through Text: For each character `char` in the input text:
-    - Append `char` to the current row of the rail matrix.
-    - If `row` is at the top or bottom edge of the rail, reverse the direction (`step`).
-    - Update `row` based on the direction (`step`).
-
-4. Concatenate Characters: Concatenate the characters row by row to form the encrypted text.
-
-5. Return Encrypted Text: Return the concatenated text as the result.
+End Function
 
 
-
-Decrytpion------------------------------------------------------------------------------------------------------------------------------->
-
-def decrypt_rail_fence(cipher, key):
-    rail = [['' for _ in range(len(cipher))] for _ in range(key)]
-    row, step = 0, 1
-    for i in range(len(cipher)):
-        rail[row][i] = '*'
-        if row == 0:
-            step = 1
-        elif row == key - 1:
-            step = -1
-        row += step
-
-    index = 0
-    for r in range(key):
-        for c in range(len(cipher)):
-            if rail[r][c] == '*':
-                rail[r][c] = cipher[index]
-                index += 1
-
-    result = []
-    row, step = 0, 1
-    for c in range(len(cipher)):
-        result.append(rail[row][c])
-        if row == 0:
-            step = 1
-        elif row == key - 1:
-            step = -1
-        row += step
-
-    return ''.join(result)
-
-def main():
-    cipher = input("Enter the text to decrypt: ")
-    key = int(input("Enter the key: "))
-    decrypted_text = decrypt_rail_fence(cipher, key)
-    print("Decrypted text:", decrypted_text)
-
-if __name__ == "__main__":
-    main()
 
 
 Decrytpion------------------------------------------------------------------------------------------------------------------------------->
-1. Initialize: Create an empty matrix called "rail" with dimensions `key x len(cipher)`.
+def decrypt():
+    text = input("Enter a message to decrypt: ")
+    key = input("Enter the key (number): ")
+    
+    try:
+        key = int(key)
+    except ValueError:
+        return "Error: The key must be a number."
 
-2. Setup Variables: Set `row` to 0 and `step` to 1.
+    decrypted_message = ""
+    for ch in text:
+        if ch.isalnum():  # Check if character is alphanumeric
+            if ch.islower():
+                ch = chr((ord(ch) - ord('a') - key + 26) % 26 + ord('a'))
+            elif ch.isupper():
+                ch = chr((ord(ch) - ord('A') - key + 26) % 26 + ord('A'))
+            elif ch.isdigit():
+                ch = chr((ord(ch) - ord('0') - key + 10) % 10 + ord('0'))
+        else:
+            return "Error: Invalid character in message. Use only alphanumeric characters."
+        decrypted_message += ch
 
-3. Mark Positions: Mark the positions in the rail matrix where characters should be placed by iterating through each position in the matrix:
-    - Place a marker ('*') at position `[row][i]`.
-    - If `row` is at the top or bottom edge of the rail, reverse the direction (`step`).
-    - Update `row` based on the direction (`step`).
+    return f"Decrypted message: {decrypted_message}"
 
-4. Fill the Matrix: Fill the rail matrix with characters from the cipher in the same zigzag pattern used during encryption.
+print(decrypt())
 
-5. Reconstruct Original Text: Reconstruct the original text by reading characters in the zigzag pattern, starting from the rail matrix.
 
-6. Return Decrypted Text: Return the reconstructed text as the result.
+Decrytpion------------------------------------------------------------------------------------------------------------------------------->
+Function Decrypt
+    Input: None
+    Output: Decrypted message or error message
 
-These step-by-step pseudocodes outline the process of both encrypting and decrypting text using the Rail Fence Cipher algorithm.
+    Steps:
+    1. Prompt the user "Enter a message to decrypt:"
+    2. Read the input message into variable 'text'
+    3. Prompt the user "Enter the key (number):"
+    4. Read the input key into variable 'key'
+    5. Try to convert 'key' to an integer
+        If conversion fails, return "Error: The key must be a number."
+    6. Initialize 'decrypted_message' to an empty string
+    7. For each character 'ch' in 'text'
+        a. If 'ch' is a lowercase letter
+            i. Convert 'ch' using the formula (ord(ch) - ord('a') - key + 26) % 26 + ord('a')
+            ii. Convert the result back to a character and append to 'decrypted_message'
+        b. Else if 'ch' is an uppercase letter
+            i. Convert 'ch' using the formula (ord(ch) - ord('A') - key + 26) % 26 + ord('A')
+            ii. Convert the result back to a character and append to 'decrypted_message'
+        c. Else if 'ch' is a digit
+            i. Convert 'ch' using the formula (ord(ch) - ord('0') - key + 10) % 10 + ord('0')
+            ii. Convert the result back to a character and append to 'decrypted_message'
+        d. Else
+            return "Error: Invalid character in message. Use only alphanumeric characters."
+    8. Return "Decrypted message: " concatenated with 'decrypted_message'
+
